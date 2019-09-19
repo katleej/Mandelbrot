@@ -18,8 +18,13 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
 {
 	//YOUR CODE HERE
 	struct ComplexNumber* z = newComplexNumber(0,0);
-	struct ComplexNumber* m = ComplexSum(ComplexProduct(z,z), point); 
-	if (ComplexAbs(m) >= threshold) {
+	struct ComplexNumber* product = ComplexProduct(z, z); 
+	struct ComplexNumber* m = ComplexSum(product, point); 
+	if (ComplexAbs(m) >= threshold) { 
+		free(m);
+		free(z); 
+		free(point);
+		free(product);  
 		return 1; 
 	} else { 
 	
@@ -27,17 +32,24 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
 		while (maxiters > 0) { 
 			if (ComplexAbs(m) >= threshold) {
 				free(m);
-				free(z);  
+				free(z);
+				free(point);
+				free(product);    
 				return count; 
-			} else {
-				m = ComplexSum(ComplexProduct(z,z), point); 
-				z = ComplexSum(ComplexProduct(z,z), point); 
+			} else {		 
+				product = ComplexProduct(z,z); 
+				m = ComplexSum(product, point); 
+				z = ComplexSum(product, point); 
 				count++; 
 				maxiters--;
 			} 
 		} 
 	}			    
-  	return 0;
+  	free(m);
+	free(z); 
+	free(point); 
+	free(product); 
+	return 0;
 }
 
 /*
