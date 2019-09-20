@@ -36,7 +36,7 @@ ComplexNumber* ComplexProduct(ComplexNumber* a, ComplexNumber* b)
 	double two_i = b -> imaginary; 
 	struct ComplexNumber* product = (struct ComplexNumber*) malloc(sizeof(ComplexNumber));
 	product -> real = (one * two - one_i * two_i);
-	product -> imaginary = (one * two_i + two * one_i);  	 
+	product -> imaginary = (one * two_i + two * one_i);
 	return product;
 }
 
@@ -59,7 +59,7 @@ double ComplexAbs(ComplexNumber* a)
 {
     //YOUR CODE HERE
 	double real = a -> real; 
-	double imaginary = a -> imaginary; 
+	double imaginary = a -> imaginary;  
 	return sqrt(pow(real, 2) + pow(imaginary, 2));
 }
 

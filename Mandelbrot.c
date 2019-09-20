@@ -36,8 +36,11 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
 				free(point);
 				free(product);    
 				return count; 
-			} else {		 
-				product = ComplexProduct(z,z); 
+			} else {		
+				free(product);  
+				product = ComplexProduct(z,z);
+				free(m);
+				free(z);  
 				m = ComplexSum(product, point); 
 				z = ComplexSum(product, point); 
 				count++; 
@@ -62,7 +65,7 @@ void Mandelbrot(double threshold, u_int64_t max_iterations, ComplexNumber* cente
 	double y = Im(center); 
 	double length_of_square = resolution * 2 + 1;
 	double n = -1; 
-	for (u_int64_t i = 0; i < pow(length_of_square, 2); i++) {
+	for (u_int64_t i = 0; i < length_of_square * length_of_square; i++) {
 		if (i % ((u_int64_t) length_of_square) == 0) {
 			n = n + 1;
 		}
