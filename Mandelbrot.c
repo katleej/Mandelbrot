@@ -21,26 +21,26 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
 	struct ComplexNumber* product = ComplexProduct(z, z); 
 	struct ComplexNumber* m = ComplexSum(product, point); 
 	if (ComplexAbs(m) >= threshold) { 
-		free(m);
-		free(z); 
-		free(point);
-		free(product);  
+		freeComplexNumber(m);
+		freeComplexNumber(z); 
+		freeComplexNumber(point);
+		freeComplexNumber(product);  
 		return 1; 
 	} else { 
 	
 		u_int64_t count = 0;
 		while (maxiters > 0) { 
 			if (ComplexAbs(m) >= threshold) {
-				free(m);
-				free(z);
-				free(point);
-				free(product);    
+				freeComplexNumber(m);
+				freeComplexNumber(z);
+				freeComplexNumber(point);
+				freeComplexNumber(product);    
 				return count; 
 			} else {		
-				free(product);  
+				freeComplexNumber(product);  
 				product = ComplexProduct(z,z);
-				free(m);
-				free(z);  
+				freeComplexNumber(m);
+				freeComplexNumber(z);  
 				m = ComplexSum(product, point); 
 				z = ComplexSum(product, point); 
 				count++; 
@@ -48,10 +48,10 @@ u_int64_t MandelbrotIterations(u_int64_t maxiters, ComplexNumber * point, double
 			} 
 		} 
 	}			    
-  	free(m);
-	free(z); 
-	free(point); 
-	free(product); 
+  	freeComplexNumber(m);
+	freeComplexNumber(z); 
+	freeComplexNumber(point); 
+	freeComplexNumber(product); 
 	return 0;
 }
 
