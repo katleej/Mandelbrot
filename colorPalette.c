@@ -60,6 +60,7 @@ int P3colorpalette(char* colorfile, int width, int heightpercolor, char* outputf
 	           count++;
 	        }     
 	    }
+	    free(color_array[i]); 
         }	    
     free(colorcount);
     free(color_array);
@@ -106,6 +107,7 @@ int P6colorpalette(char* colorfile, int width, int heightpercolor, char* outputf
 		    count++;
 		}
         }
+	free(color_array[i]); 
     }
     free(colorcount); 
     free(color_array);
