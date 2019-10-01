@@ -38,6 +38,7 @@ int P3colorpalette(char* colorfile, int width, int heightpercolor, char* outputf
 	
 	//make sure the colorfile is valid and if it is not, return 1
 	if (color_array == NULL) {
+	    free(colorcount); 
 	    return 1; 
 	} 
 
@@ -60,6 +61,7 @@ int P3colorpalette(char* colorfile, int width, int heightpercolor, char* outputf
 	        }     
 	    }
         }	    
+    free(colorcount);
     free(color_array);
     fclose(input);
     fclose(output);
@@ -88,18 +90,24 @@ int P6colorpalette(char* colorfile, int width, int heightpercolor, char* outputf
 
         //make sure the colorfile is valid and if it is not, return 1
         if (color_array == NULL) {
+	    free(colorcount); 
             return 1;
         }
 
         for (int i = 0; i < length_of_colorfile; i++) {
-            //make sure single line of color is replicated as much as width
-            int count = 0;
-            while (count < width) {
-            //one starts in new line if the count is zero
-               fprintf(output, "%c", );
-               count++;
-            }
+	    uint8_t one, two, three;
+	    one = color_array[i][0];
+	    two = color_array[i][1];
+	    three = color_array[i][2];
+	    for (int j = 0; j < heightpercolor; j++) {
+		int count = 0; 
+		while (count < width) {
+		    fprintf(output, "%c\%c\%c", one, two, three); 
+		    count++;
+		}
         }
+    }
+    free(colorcount); 
     free(color_array);
     fclose(input);
     fclose(output);
