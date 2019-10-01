@@ -29,6 +29,11 @@ As another example, if initialscale=10, finalscale=0.01, framecount=5, then your
 */
 void MandelMovie(double threshold, u_int64_t max_iterations, ComplexNumber* center, double initialscale, double finalscale, int framecount, u_int64_t resolution, u_int64_t ** output){
     //YOUR CODE HERE
+    double a = pow((finalscale/initialscale),1/(framecount-1))
+    for (int i = 0; i < framecount; i++) {
+	double nth_scale = initialscale * pow(a, i); 
+	Mandelbrot(threshold, max_iterations, center, nth_scale, resolution, output[i]);  
+    }
 }
 
 /**************
@@ -48,8 +53,28 @@ int main(int argc, char* argv[])
 	*/
 
 	//YOUR CODE HERE 
+	if (argc != 11) {
+	    printf("%s: Wrong number of arguments, especting 10\n", argv[0]);
+	}
+	double threshold, initialscale, finalscale, framecount; 
+	u_int64_t max_iterations, resolution
+	ComplexNumber* center; 
 
+	threshold = atof(argv[1]); 
+	max_iterations = (u_int64_t) atoi(argv[2]); 
+	center = newComplexNumber(atof(argv[3]), atof(argv[4])); 
+	initialscale = atof(argv[5]); 
+	finalscale = atof(argv[6]); 
+	framecount = atof(argv[7]); 
+	resolution = (u_int64_t) atoi(argv[8]); 
+	output_folder = argv[9]; 
+	colorfile = argv[10]; 
 
+	if (threshold <= 0 || initialscale <= 0 || finalscale <= 0 || max_iterations <= 0) {
+		printf("The threshold, scale, max_iterations must be > 0");
+		printUsage(argv); 
+		return 1; 
+	}
 
 
 	//STEP 2: Run MandelMovie on the correct arguments.
@@ -59,8 +84,15 @@ int main(int argc, char* argv[])
 	*/
 
 	//YOUR CODE HERE 
+	u_int64_t** output;
+	output = (u_int64_t **) malloc(framecount * size_of(u_int64_t*)); 
+	if (output == NULL) {
+		printf("Unable to allocate %lu bytes\n", framecount * sizeof(u_int64_t*));
+		return 1; 
+	} 
 
-
+	MandelMovie(threshold, max_iterations, center, initialscale, finalscale, framecount, resolution, output);
+	printf("Calculation complete, outputting to file %s/n", argv[9]); 
 
 	//STEP 3: Output the results of MandelMovie to .ppm files.
 	/*
@@ -70,7 +102,39 @@ int main(int argc, char* argv[])
 	As a reminder, we are using P6 format, not P3.
 	*/
 
-	//YOUR CODE HERE 
+	//YOUR CODE HERE
+	double length_of_square = resolution * 2 + 1; 
+	FILE* color_file = fopen(colorfile, "r");
+	for (int i = 0; i < framecount; i++) {
+		//first create a file with that specific name
+		int one, two, three, four, five = 0;
+		////////fix this part to make sure it does for everything///// 
+		char file_name[15];
+		sprintf(file_name, output_folder + "/frame%d%d%d%d%d.ppm", one, two, three, four, five);  
+		FILE* ppm_file = fopen(file_name, "w"); 
+
+		//let's now call each frame 
+		u_int64_t* one_frame = output[i];
+		//loop through individual pixels in the frame 
+		for (int j = 0; j < length_of_sqaure * length_of_sqaure; i++) {
+			//if it is zero then it is black
+			if (output[i][j] == 0) {
+				fprintf(ppm_file, "%c\%c\%c", 0,0,0); 
+			} else {
+				//first get total number of colors
+				int total_colors = 0; 
+				fscanf(color_file, "%d", &total_colors);
+				//access an array of colors
+				int* colorcount = (int*) malloc(sizeof(int*)); 
+				uint8_t** color_array = FileToColorMap(colorfile, colorcount); 
+				int index = output[i][j] % total_colors; 
+				//get color of that specific index
+				uint8_t* color_of_index = color_array[index-1]; 
+				fprintf(ppm_file, "%c\%c\%c", color_of_index[0], color_of_index[1], color_of_index[2]); 	
+			}
+		}		
+	}
+	 
 
 
 
@@ -80,7 +144,7 @@ int main(int argc, char* argv[])
 	Make sure there's no memory leak.
 	*/
 	//YOUR CODE HERE 
-
+	free(output); 
 
 
 
